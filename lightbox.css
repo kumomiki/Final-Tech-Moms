@@ -1,0 +1,96 @@
+/* ========== 通用 Lightbox ========== */
+.lb-root{
+  position: fixed;
+  inset: 0;
+  display: grid;
+  place-items: center;
+  opacity: 0;
+  pointer-events: none;
+  z-index: 10000;
+  transition: opacity .2s ease;
+}
+.lb-root.is-open{
+  opacity: 1;
+  pointer-events: auto;
+}
+.lb-backdrop{
+  position: absolute;
+  inset: 0;
+  background: rgba(0,0,0,.72);
+}
+
+.lb-dialog{
+  box-sizing: border-box;
+  padding: 16px;                /* 與邊緣留白 */
+  position: relative;
+  pointer-events: auto;
+}
+
+
+.lb-img,
+.lb-video{
+  display: block;
+  width: auto;                  /* 依比例縮放 */
+  height: auto;
+  max-width: min(96vw, 1200px); /* 視窗寬限制 */
+  max-height: calc(100vh - 120px); /* 視窗高限制（扣掉上方關閉鈕空間） */
+  object-fit: contain;          /* 內容等比置中 */
+  border-radius: 12px;
+  box-shadow: 0 10px 30px rgba(0,0,0,.35);
+  background: #000;
+}
+
+
+
+.lb-cap{
+  padding: 5px 0;
+  color: #eee;
+  font-size: .95rem;
+  text-align: center;
+}
+.lb-close{
+  position: absolute;
+  top: -10px;
+  right: -10px;
+  width: 36px;
+  height: 36px;
+  border: 0;
+  border-radius: 50%;
+  background: rgba(255,255,255,.9);
+  color: #111;
+  font-weight: 700;
+  font-size: 18px;
+  line-height: 36px;
+  cursor: pointer;
+  box-shadow: 0 4px 14px rgba(0,0,0,.2);
+  z-index: 3;
+}
+.lb-nav{
+  position: absolute;
+  top: 50%;
+  transform: translateY(-50%);
+  border: 0;
+  width: 42px;
+  height: 42px;
+  border-radius: 50%;
+  background: rgba(255,255,255,.9);
+  color: #111;
+  font-size: 22px;
+  line-height: 42px;
+  cursor: pointer;
+  box-shadow: 0 4px 14px rgba(0,0,0,.2);
+  z-index: 3;
+}
+.lb-prev{ left: -56px; }
+.lb-next{ right: -56px; }
+
+@media (max-width: 640px){
+  .lb-prev{ left: 8px; }
+  .lb-next{ right: 8px; }
+}
+
+/* 可選：當只有一張時隱藏左右鍵 */
+.lb-root[data-lb-single="true"] .lb-prev,
+.lb-root[data-lb-single="true"] .lb-next{
+  display: none;
+}

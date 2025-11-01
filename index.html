@@ -1,0 +1,101 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <script
+      src="https://kit.fontawesome.com/3d4427064b.js"
+      crossorigin="anonymous"
+    ></script>
+    <link rel="stylesheet" href="style.css" />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Amiko:wght@400;600;700&family=Arimo:wght@400;700&subset=hebrew&family=Ooh+Baby&display=swap"
+      rel="stylesheet"
+    />
+    <link rel="stylesheet" href="lightbox.css" />
+
+    <title>Miki's Website</title>
+  </head>
+  <body>
+    <div class="container">
+      <nav class="nav-wrapper" role="navigation" aria-label="Primary">
+        <a class="nav-logo" href="#/home" data-route aria-label="Go to Home">
+          <img src="image/homepage_logo.png" alt="logo" />
+        </a>
+        <!-- add hamburger -->
+        <button
+          class="nav-toggle"
+          aria-expanded="false"
+          aria-controls="nav-group"
+          aria-label="Open menu"
+        >
+          <i class="fa-solid fa-bars"></i>
+        </button>
+        <!-- add id use for aria-controls and JS -->
+        <div class="nav-group" id="nav-group">
+          <a href="#/about" data-route>About</a>
+          <a href="#/portfolio" data-route>Portfolio</a>
+          <a href="#/resume" data-route>Resume</a>
+          <a href="#/contact" data-route>Contact</a>
+        </div>
+      </nav>
+      <section>
+        <!-- Container for loading page content -->
+        <main id="content" tabindex="-1"></main>
+        <!-- Overlay used when the mobile menu is open. -->
+        <div class="nav-overlay" hidden></div>
+      </section>
+    </div>
+
+    <!-- ======= Experience Modal structure ======= -->
+    <div class="modal-overlay" id="expModal">
+      <div class="modal-box">
+        <button class="modal-close" id="modalClose">x</button>
+        <h2 id="modalTitle">Experience Details</h2>
+        <p id="modalText" class="experience-text">Experience Highlights</p>
+      </div>
+    </div>
+
+    <!-- ===== 全域通用 Lightbox（放一次即可） ===== -->
+    <div class="lb-root" data-lb-root aria-hidden="true">
+      <div class="lb-backdrop" data-lb-backdrop></div>
+
+      <figure
+        class="lb-dialog"
+        role="dialog"
+        aria-modal="true"
+        aria-label="Image viewer"
+      >
+        <button class="lb-close" type="button" data-lb-close aria-label="Close">
+          ×
+        </button>
+
+        <img class="lb-img" data-lb-img alt="" />
+        <video class="lb-video" data-lb-video-el controls playsinline></video>
+        <figcaption class="lb-cap" data-lb-cap></figcaption>
+
+        <button
+          class="lb-nav lb-prev"
+          type="button"
+          data-lb-prev
+          aria-label="Previous"
+        >
+          ‹
+        </button>
+        <button
+          class="lb-nav lb-next"
+          type="button"
+          data-lb-next
+          aria-label="Next"
+        >
+          ›
+        </button>
+      </figure>
+    </div>
+    <script src="js/nav.js"></script>
+    <script src="js/lightbox.js" defer></script>
+    <script src="js/portfolio-cases.js" defer></script>
+    <script defer src="js/app.js"></script>
+  </body>
+</html>

@@ -1,0 +1,124 @@
+<section class="puzzle" aria-label="Design word puzzle">
+  <div class="grid" role="grid" aria-describedby="puzzle-help"></div>
+
+  <p id="puzzle-help" class="sr-only">
+    將滑鼠移到可點選單字的任一字母可高亮整個單字，按 Enter 或點擊開啟作品介紹。
+  </p>
+  <!-- ✅ 提示文字放在這裡（拼字圖下方） -->
+  <p class="tap-hint">Tap a word to view projects</p>
+
+  <!-- 抽屜（內容容器改為 <div>） -->
+  <aside
+    id="drawer"
+    class="drawer"
+    role="dialog"
+    aria-modal="true"
+    aria-hidden="true"
+    aria-labelledby="drawer-title"
+  >
+    <div class="drawer-head">
+      <h2 id="drawer-title" class="drawer-title"></h2>
+      <button class="drawer-close" aria-label="Close">X</button>
+    </div>
+    <div class="drawer-body">
+      <!-- cards -->
+      <div data-panel="card">
+        <!-- 第一步：選擇類型 -->
+        <div class="case-nav" role="tablist" aria-label="CARD cases">
+          <button
+            class="case-btn"
+            role="tab"
+            aria-selected="true"
+            data-choice="wedding"
+          >
+            Wedding
+          </button>
+          <button
+            class="case-btn"
+            role="tab"
+            aria-selected="false"
+            data-choice="baby"
+          >
+            Baby
+          </button>
+          <button
+            class="case-btn"
+            role="tab"
+            aria-selected="false"
+            data-choice="new-year"
+          >
+            New Year
+          </button>
+        </div>
+
+        <!-- 第二步：實際內容（預設只顯示第一個 .case） -->
+        <!-- wedding card -->
+        <div class="case" data-case="wedding">
+          <div class="case-slot" data-src="partials/card-wedding.html"></div>
+        </div>
+        <!-- baby party card -->
+        <div class="case" data-case="baby" hidden>
+          <div class="case-slot" data-src="partials/card-baby.html"></div>
+        </div>
+        <!-- new year card -->
+        <div class="case" data-case="new-year" hidden>
+          <div class="case-slot" data-src="partials/card-newyear.html"></div>
+        </div>
+      </div>
+      <!-- poster -->
+      <div data-panel="poster" hidden>
+        <div class="case-nav" role="tablist" aria-label="CARD cases">
+          <button
+            class="case-btn"
+            role="tab"
+            aria-selected="true"
+            data-choice="dragon-boat-festival"
+          >
+            Dragon Boat Festival
+          </button>
+        </div>
+        <div class="case" data-case="dragon-boat-festival">
+          <div
+            class="case-slot"
+            data-src="partials/poster-dragonboatfestival.html"
+          ></div>
+        </div>
+      </div>
+      <!-- website -->
+      <div data-panel="website" hidden>
+        <div class="case-nav" role="tablist" aria-label="CARD cases">
+          <button
+            class="case-btn"
+            role="tab"
+            aria-selected="true"
+            data-choice="blog"
+          >
+            Blog
+          </button>
+        </div>
+        <div class="case" data-case="blog">
+          <div class="case-slot" data-src="partials/website-blog.html"></div>
+        </div>
+      </div>
+      <!-- logo -->
+      <div data-panel="logo" hidden>
+        <div class="case-nav" role="tablist" aria-label="CARD cases">
+          <button
+            class="case-btn"
+            role="tab"
+            aria-selected="true"
+            data-choice="laboratory"
+          >
+            Laboratory
+          </button>
+        </div>
+        <div class="case" data-case="laboratory">
+          <div
+            class="case-slot"
+            data-src="partials/logo-laboratory.html"
+          ></div>
+        </div>
+      </div>
+    </div>
+  </aside>
+</section>
