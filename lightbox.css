@@ -94,3 +94,9 @@
 .lb-root[data-lb-single="true"] .lb-next{
   display: none;
 }
+
+/* Lightbox 關閉時，確實不攔截事件也不佔位 */
+.lb-root[aria-hidden="true"] {
+  display: none !important;         /* 或者 visibility: hidden + pointer-events: none 也行 */
+  pointer-events: none !important;
+}
