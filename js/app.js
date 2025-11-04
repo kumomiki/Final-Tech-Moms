@@ -375,37 +375,37 @@ grid.addEventListener('keydown', function (e) {
 })();
 
 /* === 手機 tap 預覽：第一次點亮，第二次開 === */
-var lastTapWord = null;
-var lastTapAt = 0;
+// var lastTapWord = null;
+// var lastTapAt = 0;
 
-function isTouchDevice(){
-  return window.matchMedia && matchMedia('(hover: none) and (pointer: coarse)').matches;
-}
+// function isTouchDevice(){
+//   return window.matchMedia && matchMedia('(hover: none) and (pointer: coarse)').matches;
+// }
 
-grid.addEventListener('touchstart', function(e){
-  var btn = e.target.closest && e.target.closest('.cell');
-  if(!btn || btn.dataset.interactive !== 'true') return;
+// grid.addEventListener('touchstart', function(e){
+//   var btn = e.target.closest && e.target.closest('.cell');
+//   if(!btn || btn.dataset.interactive !== 'true') return;
 
-  var word = btn.dataset.word;
-  var now = Date.now();
+//   var word = btn.dataset.word;
+//   var now = Date.now();
 
-  if(isTouchDevice()){
-    // 兩次點擊間隔 < 700ms 視為第二下 → 開抽屜
-    if(lastTapWord === word && (now - lastTapAt) < 700){
-      setActive(word);
-      lastTapWord = null;
-      return;
-    }
-    // 第一下：只預覽（整個單字變橘色 600ms）
-    e.preventDefault();
-    grid.dataset.hover = word;
-    lastTapWord = word;
-    lastTapAt = now;
-    setTimeout(function(){
-      if(grid.dataset.active !== word && lastTapWord === word){
-        delete grid.dataset.hover;
-      }
-    }, 600);
-  }
-}, {passive:false});
+//   if(isTouchDevice()){
+//     // 兩次點擊間隔 < 700ms 視為第二下 → 開抽屜
+//     if(lastTapWord === word && (now - lastTapAt) < 700){
+//       setActive(word);
+//       lastTapWord = null;
+//       return;
+//     }
+//     // 第一下：只預覽（整個單字變橘色 600ms）
+//     e.preventDefault();
+//     grid.dataset.hover = word;
+//     lastTapWord = word;
+//     lastTapAt = now;
+//     setTimeout(function(){
+//       if(grid.dataset.active !== word && lastTapWord === word){
+//         delete grid.dataset.hover;
+//       }
+//     }, 600);
+//   }
+// }, {passive:false});
 
