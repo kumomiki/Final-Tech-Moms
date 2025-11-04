@@ -218,14 +218,29 @@ window.addEventListener('DOMContentLoaded', () => {
       if (word && title) title.textContent = word.toUpperCase();
 
       // >>> 新增：如果該 panel 有 case-nav，就預設選第一個
-  if (word) {
+    if (word) {
     const panel = drawer.querySelector(`[data-panel="${word}"]`);
     if (panel) initPanelCases(panel);   // 呼叫下面的函式
-  }
+    // ★ 開啟時把焦點放到關閉鈕，避免之前的 video 留焦點
+    const closeBtn = drawer.querySelector('.drawer-close');
+    closeBtn && closeBtn.focus({ preventScroll: true });
+
+    } else {
+    // ★ 關閉前，若目前焦點落在 drawer 裡，先移走
+    if (drawer.contains(document.activeElement)) {
+      document.activeElement.blur();
+    }
+    // ★ 再隱藏抽屜
+    drawer.setAttribute('aria-hidden', 'true');
+
+    // 把 hover/active 狀態清掉
+    delete grid.dataset.active;
+    delete grid.dataset.hover;
+    }
     }
 
     // 啟用指定 panel 的 case 切換（預設選第一個）
-function initPanelCases(panel){
+  function initPanelCases(panel){
   const nav = panel.querySelector('.case-nav');
   if (!nav) return; // 沒有二階段就跳過
 
@@ -236,6 +251,9 @@ function initPanelCases(panel){
   // 預設選第一個
   btns.forEach((b, i) => b.setAttribute('aria-selected', i === 0 ? 'true' : 'false'));
   cases.forEach((c, i) => c.hidden = i !== 0);
+
+  
+
 }
 
 // 事件委派：點按 case 按鈕切換內容
@@ -262,40 +280,68 @@ drawer.addEventListener('click', (e) => {
 
 
     // 事件（只對可互動的四個字）
-    grid.addEventListener('mouseover', function (e) {
-      var btn = e.target.closest && e.target.closest('.cell');
-      if (!btn || btn.dataset.interactive !== 'true') return;
-      setHover(btn.dataset.word);
-    });
-    grid.addEventListener('mouseout', function () { setHover(''); });
+    // grid.addEventListener('mouseover', function (e) {
+    //   var btn = e.target.closest && e.target.closest('.cell');
+    //   if (!btn || btn.dataset.interactive !== 'true') return;
+    //   setHover(btn.dataset.word);
+    // });
+    // grid.addEventListener('mouseout', function () { setHover(''); });
 
-    grid.addEventListener('click', function (e) {
-      var btn = e.target.closest && e.target.closest('.cell');
-      if (!btn || btn.dataset.interactive !== 'true') return;
-      setActive(btn.dataset.word);
-    });
+    // grid.addEventListener('click', function (e) {
+    //   var btn = e.target.closest && e.target.closest('.cell');
+    //   if (!btn || btn.dataset.interactive !== 'true') return;
+    //   setActive(btn.dataset.word);
+    // });
 
-    grid.addEventListener('keydown', function (e) {
-      if (e.key === 'Enter' || e.key === ' ') {
-        var btn = e.target.closest && e.target.closest('.cell');
-        if (btn && btn.dataset && btn.dataset.interactive === 'true') {
-          e.preventDefault();
-          setActive(btn.dataset.word);
-        }
-      }
-    });
+    // grid.addEventListener('keydown', function (e) {
+    //   if (e.key === 'Enter' || e.key === ' ') {
+    //     var btn = e.target.closest && e.target.closest('.cell');
+    //     if (btn && btn.dataset && btn.dataset.interactive === 'true') {
+    //       e.preventDefault();
+    //       setActive(btn.dataset.word);
+    //     }
+    //   }
+    // });
+
+    // 事件（只對可互動的四個字）
+function isLiveWord(w){
+  return w && /^(card|poster|website|logo)$/.test(w);
+}
+
+grid.addEventListener('mouseover', function (e) {
+  var btn = e.target.closest && e.target.closest('.cell');
+  if (!btn || !isLiveWord(btn.dataset.word)) return;
+  setHover(btn.dataset.word);
+});
+
+grid.addEventListener('mouseout', function () { setHover(''); });
+
+grid.addEventListener('click', function (e) {
+  var btn = e.target.closest && e.target.closest('.cell');
+  if (!btn || !isLiveWord(btn.dataset.word)) return;
+  setActive(btn.dataset.word);
+});
+
+grid.addEventListener('keydown', function (e) {
+  if (e.key !== 'Enter' && e.key !== ' ') return;
+  var btn = e.target.closest && e.target.closest('.cell');
+  if (!btn || !isLiveWord(btn.dataset.word)) return;
+  e.preventDefault();
+  setActive(btn.dataset.word);
+});
+
 
     if (close) close.addEventListener('click', function () { setActive(null); });
     if (drawer) drawer.addEventListener('keydown', function (e) { if (e.key === 'Escape') setActive(null); });
 
     /* === 點畫面空白處關閉抽屜 === */
-document.addEventListener('click', function(e){
+  document.addEventListener('click', function(e){
   var isDrawer = e.target.closest && e.target.closest('.drawer');
   var isCell   = e.target.closest && e.target.closest('.cell');
   if (drawer && drawer.getAttribute('aria-hidden') === 'false' && !isDrawer && !isCell) {
     setActive(null);
   }
-});
+  });
 
     grid.dataset.pzInited = '1';
     console.log('[Puzzle] initialized');
