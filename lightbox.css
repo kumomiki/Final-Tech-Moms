@@ -100,3 +100,91 @@
   display: none !important;         /* 或者 visibility: hidden + pointer-events: none 也行 */
   pointer-events: none !important;
 }
+
+/* === 手機燈箱：避免圖片與按鈕被螢幕裁切 === */
+@media (max-width: 768px){
+  /* 整個 lightbox 外框：置中並留安全邊距 */
+  .lb-root .lb-dialog{
+    position: relative;
+    width: 94vw;
+    max-height: 88dvh;         /* 使用動態視窗高，保證不被切 */
+    margin: 5vh auto;
+    overflow: hidden;          /* 讓內部內容受 max-height 限制 */
+    border-radius: 12px;
+    box-sizing: border-box;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+  }
+
+  /* close 按鈕固定在右上角，確保不被蓋掉 */
+  .lb-root .lb-close{
+    position: absolute !important;
+    top: 8px;
+    right: 8px;
+    z-index: 20;
+  }
+
+  /* 媒體容器可滾動，但不超過 80% 高度 */
+  .lb-root .lb-media{
+    flex: 1 1 auto;
+    max-height: 80dvh;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    overflow: hidden;
+    padding: 8px;
+  }
+
+  /* 圖片與影片：自動縮放、保持比例、完整顯示 */
+  .lb-root .lb-media img,
+  .lb-root .lb-media video{
+    width: auto;
+    height: auto;
+    max-width: 100%;
+    max-height: 80dvh;         /* 關鍵：保證不會超出可視高度 */
+    object-fit: contain;
+    border-radius: 10px;
+  }
+}
+
+/* === 桌機 / 平板：Lightbox 寬高上限，圖片等比縮放不超框 === */
+@media (min-width: 769px){
+  .lb-root .lb-dialog{
+    width: min(88vw, 1100px);   /* 視窗 88% 或 1100px 上限 */
+    max-height: 92vh;           /* 以視窗高度為上限 */
+    overflow: hidden;
+    margin: 4vh auto;
+    border-radius: 12px;
+    display: flex;
+    flex-direction: column;
+    box-sizing: border-box;
+  }
+
+  .lb-root .lb-media{
+    flex: 1 1 auto;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 12px 14px;         /* 給白邊避免貼邊 */
+    overflow: hidden;
+  }
+
+  .lb-root .lb-media img,
+  .lb-root .lb-media video{
+    width: auto;                /* 讓 max-* 生效 */
+    height: auto;
+    max-width: 100%;            /* 不超過容器寬 */
+    max-height: calc(92vh - 120px); /* 扣掉上下邊距/圓角/標題空間，可依需要調 100~140 */
+    object-fit: contain;        /* 不裁切，完整顯示 */
+    display: block;
+  }
+
+  /* 讓關閉鈕永遠在可視區內 */
+  .lb-root .lb-close{
+    position: absolute !important;
+    top: 10px;
+    right: 10px;
+    z-index: 20;
+  }
+}
