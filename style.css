@@ -96,10 +96,50 @@ section{
   background-color: #B9B9B9;
 }
 
+.welcome-wrapper{
+  margin-left: 6vw;
+}
+
+.visitor-container{
+display: flex;
+justify-content: flex-start;
+}
+
+.total-visitor{
+  margin-left: 20%;
+}
+
+.visitor{
+  padding: 3px 0;
+}
+
+.today-visitor, .total-visitor{
+  display: flex;
+}
+.number-wrapper{
+  display: flex;
+  flex-direction: column;
+}
+
+.plus{
+  font-size: 2em;
+  color:#666666
+}
+.number{
+  font-size: 50px;
+  text-align: start;
+  color:#666666;
+}
+
+.visitor-desc{
+  font-size: 14px;
+  color:#999999;
+}
+
 .greeting{
   display: flex;
   flex-direction: column;
-  margin: 80px auto;
+  margin: 30px auto;
 }
 
 .hello{
@@ -250,6 +290,31 @@ section{
 
   .greeting {
     margin: 20px 0;
+  }
+
+  .welcome-wrapper{
+    width: 80%;
+    margin: 0;
+  }
+
+  .visitor-container{
+    width: 100%;
+    display: flex;
+    justify-content: space-around;
+    margin-top: 20px;
+  }
+
+  .plus{
+    font-size: 1.5em;
+  }
+  .number{
+    font-size: 2em;
+  }
+
+  .visitor-desc{
+    font-size: 0.5em;
+    margin-top: -10%;
+    text-align: center;
   }
 
   .hello {
