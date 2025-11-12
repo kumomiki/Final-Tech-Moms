@@ -374,38 +374,81 @@ grid.addEventListener('keydown', function (e) {
   }
 })();
 
-/* === 手機 tap 預覽：第一次點亮，第二次開 === */
-// var lastTapWord = null;
-// var lastTapAt = 0;
+/// ========== Visitor Counter (ID version, SPA + session-safe, Worker API) ==========
+(() => {
+  const SEL_CONTAINER = '.visitor-container';
+  const SEL_TODAY = '#todayCount';
+  const SEL_TOTAL = '#totalCount';
 
-// function isTouchDevice(){
-//   return window.matchMedia && matchMedia('(hover: none) and (pointer: coarse)').matches;
-// }
+  // ① 改成你的 Worker /visits URL
+  const API = 'https://mikilin-portfolio.iammi7lin.workers.dev/visits';
 
-// grid.addEventListener('touchstart', function(e){
-//   var btn = e.target.closest && e.target.closest('.cell');
-//   if(!btn || btn.dataset.interactive !== 'true') return;
+  const TODAY_KEY = new Date().toISOString().slice(0, 10);
+  const inited = new WeakSet();
 
-//   var word = btn.dataset.word;
-//   var now = Date.now();
+  function animateCount(el, to, duration = 900) {
+    const start = performance.now();
+    const step = (now) => {
+      const p = Math.min((now - start) / duration, 1);
+      el.textContent = Math.floor(to * p).toLocaleString();
+      if (p < 1) requestAnimationFrame(step);
+    };
+    requestAnimationFrame(step);
+  }
 
-//   if(isTouchDevice()){
-//     // 兩次點擊間隔 < 700ms 視為第二下 → 開抽屜
-//     if(lastTapWord === word && (now - lastTapAt) < 700){
-//       setActive(word);
-//       lastTapWord = null;
-//       return;
-//     }
-//     // 第一下：只預覽（整個單字變橘色 600ms）
-//     e.preventDefault();
-//     grid.dataset.hover = word;
-//     lastTapWord = word;
-//     lastTapAt = now;
-//     setTimeout(function(){
-//       if(grid.dataset.active !== word && lastTapWord === word){
-//         delete grid.dataset.hover;
-//       }
-//     }, 600);
-//   }
-// }, {passive:false});
+  // ② 用自己的 API 取值／加一
+  async function fetchCounts({ increment }) {
+    const url = increment ? `${API}?hit=1` : API;
+    const res = await fetch(url, { cache: 'no-store' });
+    if (!res.ok) throw new Error(`HTTP ${res.status}`);
+    // Worker 會回傳 { total, today }
+    return res.json();
+  }
 
+  async function initCounter(container) {
+    if (!container || inited.has(container)) return;
+    const todayEl = container.querySelector(SEL_TODAY);
+    const totalEl = container.querySelector(SEL_TOTAL);
+    if (!todayEl || !totalEl) return;
+
+    inited.add(container);
+    todayEl.textContent = '0';
+    totalEl.textContent = '0';
+
+    // 同一瀏覽 session 只 +1 一次
+    const seenTotal = sessionStorage.getItem('counter:hit:total') === '1';
+    const seenToday = sessionStorage.getItem(`counter:hit:today:${TODAY_KEY}`) === '1';
+    const increment = !(seenTotal && seenToday);
+
+    try {
+      const { total, today } = await fetchCounts({ increment });
+      if (increment) {
+        sessionStorage.setItem('counter:hit:total', '1');
+        sessionStorage.setItem(`counter:hit:today:${TODAY_KEY}`, '1');
+      }
+      animateCount(todayEl, today, 1200);
+      animateCount(totalEl, total, 1400);
+    } catch (e) {
+      console.warn('[counter] fetch failed; keep zeros', e);
+    }
+  }
+
+  function watchAndInit() {
+    document.querySelectorAll(SEL_CONTAINER).forEach(initCounter);
+    const obs = new MutationObserver((muts) => {
+      for (const m of muts) {
+        m.addedNodes.forEach(node => {
+          if (!(node instanceof HTMLElement)) return;
+          if (node.matches?.(SEL_CONTAINER)) initCounter(node);
+          node.querySelectorAll?.(SEL_CONTAINER).forEach(initCounter);
+        });
+      }
+    });
+    obs.observe(document.body, { childList: true, subtree: true });
+  }
+
+  document.addEventListener('DOMContentLoaded', watchAndInit);
+  window.addEventListener('load', watchAndInit);
+  document.addEventListener('page:rendered', watchAndInit);
+  window.addEventListener('popstate', watchAndInit);
+})();
